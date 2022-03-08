@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxxt.mapper.OrderComMapper">
+    <resultMap id="BaseResultMap" type="com.yjxxt.bean.OrderCom">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="order_id" property="orderId" jdbcType="INTEGER"/>
+        <result column="com_id" property="comId" jdbcType="INTEGER"/>
+        <result column="com_price" property="comPrice" jdbcType="DOUBLE"/>
+        <result column="com_name" property="comName" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, order_id, com_id, com_price, com_num
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order_com
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_order_com
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yjxxt.bean.OrderCom">
+    insert into t_order_com (id, order_id, com_id, 
+      com_price, com_num)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{comId,jdbcType=INTEGER}, 
+      #{comPrice,jdbcType=DOUBLE}, #{comNum,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.yjxxt.bean.OrderCom"
+     keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into t_order_com
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="comId != null">
+                com_id,
+            </if>
+            <if test="comPrice != null">
+                com_price,
+            </if>
+            <if test="comName != null">
+                com_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="comId != null">
+                #{comId,jdbcType=INTEGER},
+            </if>
+            <if test="comPrice != null">
+                #{comPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="comName != null">
+                #{comName},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yjxxt.bean.OrderCom">
+        update t_order_com
+        <set>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="comId != null">
+                com_id = #{comId,jdbcType=INTEGER},
+            </if>
+            <if test="comPrice != null">
+                com_price = #{comPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="comNum != null">
+                com_num = #{comNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yjxxt.bean.OrderCom">
+    update t_order_com
+    set order_id = #{orderId,jdbcType=INTEGER},
+      com_id = #{comId,jdbcType=INTEGER},
+      com_price = #{comPrice,jdbcType=DOUBLE},
+      com_num = #{comNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!--根据订单号查商品名-->
+    <select id="selectComByOrder" resultType="com.yjxxt.bean.OrderCom">
+        select * from t_order_com where order_id = #{id}
+    </select>
+
+
+</mapper>

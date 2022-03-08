@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxxt.mapper.ComMapper" >
+  <resultMap id="BaseResultMap" type="com.yjxxt.bean.Com" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="com_name" property="comName" jdbcType="VARCHAR" />
+    <result column="com_price" property="comPrice" jdbcType="INTEGER" />
+    <result column="com_housenum" property="comHousenum" jdbcType="INTEGER" />
+    <result column="com_remark" property="comRemark" jdbcType="VARCHAR" />
+    <result column="img_address" property="imgAddr" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, com_name, com_price, com_housenum, com_remark, img_addr
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_com
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_com
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yjxxt.bean.Com" >
+    insert into t_com (id, com_name, com_price, 
+      com_housenum, com_remark, img_addr
+      )
+    values (#{id,jdbcType=INTEGER}, #{comName,jdbcType=VARCHAR}, #{comPrice,jdbcType=INTEGER}, 
+      #{comHousenum,jdbcType=INTEGER}, #{comRemark,jdbcType=VARCHAR}, #{imgAddr,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yjxxt.bean.Com" >
+    insert into t_com
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="comName != null" >
+        com_name,
+      </if>
+      <if test="comPrice != null" >
+        com_price,
+      </if>
+      <if test="comHousenum != null" >
+        com_housenum,
+      </if>
+      <if test="comRemark != null" >
+        com_remark,
+      </if>
+      <if test="imgAddr != null" >
+        img_addr,
+      </if>
+      <if test="comState != null" >
+        com_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="comName != null" >
+        #{comName,jdbcType=VARCHAR},
+      </if>
+      <if test="comPrice != null" >
+        #{comPrice,jdbcType=INTEGER},
+      </if>
+      <if test="comHousenum != null" >
+        #{comHousenum,jdbcType=INTEGER},
+      </if>
+      <if test="comRemark != null" >
+        #{comRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="imgAddr != null" >
+        #{imgAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="comState != null" >
+        #{comState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yjxxt.bean.Com" >
+    update t_com
+    <set >
+      <if test="comName != null" >
+        com_name = #{comName,jdbcType=VARCHAR},
+      </if>
+      <if test="comPrice != null" >
+        com_price = #{comPrice,jdbcType=INTEGER},
+      </if>
+      <if test="comHousenum != null" >
+        com_housenum = #{comHousenum,jdbcType=INTEGER},
+      </if>
+      <if test="comRemark != null" >
+        com_remark = #{comRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="imgAddr != null" >
+        img_addr = #{imgAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="comState != null" >
+        com_State = #{comState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yjxxt.bean.Com" >
+    update t_com
+    set com_name = #{comName,jdbcType=VARCHAR},
+      com_price = #{comPrice,jdbcType=INTEGER},
+      com_housenum = #{comHousenum,jdbcType=INTEGER},
+      com_remark = #{comRemark,jdbcType=VARCHAR},
+      img_address = #{imgAddress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectAllComs" resultType="com.yjxxt.bean.Com">
+    select * from t_com
+    <where>
+      <if test="comName != null and comName != ''">
+        and com_name like "%${comName}%"
+      </if>
+      <if test="comPrice != null">
+        and com_price = #{comPrice}
+      </if>
+      <if test="comState != null">
+        and com_state = #{comState}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectComState" resultType="java.lang.Integer">
+    select com_state from t_com
+        <where>
+          <if test="id != null">
+            id = #{id}
+          </if>
+        </where>
+  </select>
+  <select id="selectComByName" resultType="com.yjxxt.bean.Com">
+
+    select * from t_com where com_name = #{comName}
+  </select>
+
+
+  <delete id="deleteBatch" >
+    delete from t_com
+        <where>
+            id in
+            <foreach collection="array" item="ids" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+  </delete>
+
+
+  <!--何林杰 查询所有菜品-->
+  <select id="selectAllCom" resultType="com.yjxxt.bean.Com">
+    select * from t_com where com_state = 1
+  </select>
+
+  <!--    根据商品名称查-->
+  <select id="selectByComName" resultType="com.yjxxt.bean.Com">
+    select * from t_com where com_name = #{comName}
+  </select>
+
+</mapper>

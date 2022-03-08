@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxxt.mapper.ShopCarMapper" >
+  <resultMap id="BaseResultMap" type="com.yjxxt.bean.ShopCar" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column=" user_id" property="userId" jdbcType="INTEGER" />
+    <result column=" com_id" property="comId" jdbcType="INTEGER" />
+    <result column=" asy_id" property="asyId" jdbcType="INTEGER" />
+    <result column="com_price" property="comPrice" jdbcType="DOUBLE" />
+    <result column=" asy_price" property="asyPrice" jdbcType="DOUBLE" />
+    <result column=" sum_price" property="sumPrice" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, " user_id", " com_id", " asy_id", com_price, " asy_price", " sum_price"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_shopcar
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_shopcar
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yjxxt.bean.ShopCar" >
+    insert into t_shopcar (id, " user_id", " com_id", 
+      " asy_id", com_price, " asy_price", 
+      " sum_price")
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{comId,jdbcType=INTEGER}, 
+      #{asyId,jdbcType=INTEGER}, #{comPrice,jdbcType=DOUBLE}, #{asyPrice,jdbcType=DOUBLE}, 
+      #{sumPrice,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yjxxt.bean.ShopCar" >
+    insert into t_shopcar
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        " user_id",
+      </if>
+      <if test="comId != null" >
+        " com_id",
+      </if>
+      <if test="asyId != null" >
+        " asy_id",
+      </if>
+      <if test="comPrice != null" >
+        com_price,
+      </if>
+      <if test="asyPrice != null" >
+        " asy_price",
+      </if>
+      <if test="sumPrice != null" >
+        " sum_price",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="comId != null" >
+        #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="asyId != null" >
+        #{asyId,jdbcType=INTEGER},
+      </if>
+      <if test="comPrice != null" >
+        #{comPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="asyPrice != null" >
+        #{asyPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumPrice != null" >
+        #{sumPrice,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yjxxt.bean.ShopCar" >
+    update t_shopcar
+    <set >
+      <if test="userId != null" >
+        " user_id" = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="comId != null" >
+        " com_id" = #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="asyId != null" >
+        " asy_id" = #{asyId,jdbcType=INTEGER},
+      </if>
+      <if test="comPrice != null" >
+        com_price = #{comPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="asyPrice != null" >
+        " asy_price" = #{asyPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumPrice != null" >
+        " sum_price" = #{sumPrice,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yjxxt.bean.ShopCar" >
+    update t_shopcar
+    set " user_id" = #{userId,jdbcType=INTEGER},
+      " com_id" = #{comId,jdbcType=INTEGER},
+      " asy_id" = #{asyId,jdbcType=INTEGER},
+      com_price = #{comPrice,jdbcType=DOUBLE},
+      " asy_price" = #{asyPrice,jdbcType=DOUBLE},
+      " sum_price" = #{sumPrice,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!--    批量添加至购物车-->
+    <insert id="insertBatch" parameterType="com.yjxxt.bean.ShopCar">
+        insert into t_shopcar (user_id,com_name,asy_name,com_id,asy_id,com_price,asy_price,sum_price)
+        values
+        <foreach collection="list" item="shopcar" separator=",">
+            (#{shopcar.userId},#{shopcar.comName},#{shopcar.asyName},#{shopcar.comId},#{shopcar.asyId},#{shopcar.comPrice},#{shopcar.asyPrice},#{shopcar.sumPrice})
+        </foreach>
+    </insert>
+
+<!--    查询用户购物车里的东西-->
+    <select id="selectAllInShopCar" resultType="com.yjxxt.bean.ShopCar">
+        select DISTINCT t.user_id user_id, t.com_name com_name,t.sum_price sum_price,t.mark_order_num mark_order_num
+         from
+        (select * from t_shopcar where user_id = #{userId})t
+    </select>
+
+
+    <!--根据菜名和总价删除-->
+    <delete id="deleteBycomNameAndSumPrice">
+        delete from t_shopcar where mark_order_num = #{markOrderNum}
+    </delete>
+
+<!--    根据标记数删除购物车里的记录-->
+    <delete id="deleteByMarkOrderNum">
+        delete from t_shopcar where mark_order_num = #{markOrderNum}
+    </delete>
+
+    <insert id="insertHasKey" parameterType="com.yjxxt.bean.ShopCar"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into t_shopcar (user_id,com_name,asy_name,com_id,asy_id,com_price,asy_price,sum_price)
+        values
+    (#{userId},#{comName},#{asyName},#{comId},#{asyId},#{comPrice},#{asyPrice},#{sumPrice})
+    </insert>
+
+
+    <update id="setMarkNumById">
+        update t_shopcar set mark_order_num = #{markId} where id = #{id}
+    </update>
+
+
+<!--    根据标记数查订单有多少个商品-->
+    <select id="selectShopCarByMarkOrderNum" resultType="com.yjxxt.bean.ShopCar">
+        select distinct com_id,com_price,com_name from t_shopcar where mark_order_num = #{markOrderNum}
+    </select>
+
+<!--    根据标记数查有哪些配料-->
+    <select id="selectAsyIdFromShopCarByMarkOrderNum" resultType="java.lang.String">
+        select asy_id from t_shopcar where mark_order_num = #{markOrderNum}
+    </select>
+
+
+</mapper>

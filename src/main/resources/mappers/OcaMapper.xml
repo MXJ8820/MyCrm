@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxxt.mapper.OcaMapper">
+    <resultMap id="BaseResultMap" type="com.yjxxt.bean.Oca">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="order_com_id" property="orderComId" jdbcType="INTEGER"/>
+        <result column="asy_id" property="asyId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, order_com_id, asy_id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_oca
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_oca
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yjxxt.bean.Oca">
+    insert into t_oca (id, order_com_id, asy_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderComId,jdbcType=INTEGER}, #{asyId,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.yjxxt.bean.Oca">
+        insert into t_oca
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderComId != null">
+                order_com_id,
+            </if>
+            <if test="asyId != null">
+                asy_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orderComId != null">
+                #{orderComId,jdbcType=INTEGER},
+            </if>
+            <if test="asyId != null">
+                #{asyId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yjxxt.bean.Oca">
+        update t_oca
+        <set>
+            <if test="orderComId != null">
+                order_com_id = #{orderComId,jdbcType=INTEGER},
+            </if>
+            <if test="asyId != null">
+                asy_id = #{asyId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yjxxt.bean.Oca">
+    update t_oca
+    set order_com_id = #{orderComId,jdbcType=INTEGER},
+      asy_id = #{asyId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!--    根据订单商品id查询配料-->
+    <select id="selectComByOrder" resultType="com.yjxxt.bean.Oca">
+        select * from t_oca where order_com_id = #{ingredientsId}
+    </select>
+</mapper>

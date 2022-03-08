@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxxt.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.yjxxt.bean.Order">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="order_num" property="orderNum" jdbcType="INTEGER"/>
+        <result column="order_date" property="orderDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="com_sum_price" property="comSumPrice" jdbcType="INTEGER"/>
+        <result column="is_valid" property="isValid" jdbcType="INTEGER"/>
+        <result column="ord_state" property="ordState" jdbcType="VARCHAR"/>
+        <result column="ord_remark" property="ordRemark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, order_num, order_date, update_date, user_id, com_sum_price, is_valid, ord_state, 
+    ord_remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yjxxt.bean.Order">
+    insert into t_order (id, order_num, order_date, 
+      update_date, user_id, com_sum_price, 
+      is_valid, ord_state, ord_remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, #{orderDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, #{comSumPrice,jdbcType=INTEGER}, 
+      #{isValid,jdbcType=INTEGER}, #{ordState,jdbcType=VARCHAR}, #{ordRemark,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.yjxxt.bean.Order"
+    keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderNum != null">
+                order_num,
+            </if>
+            <if test="orderDate != null">
+                order_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="comSumPrice != null">
+                com_sum_price,
+            </if>
+            <if test="isValid != null">
+                is_valid,
+            </if>
+            <if test="ordState != null">
+                ord_state,
+            </if>
+            <if test="ordRemark != null">
+                ord_remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum,jdbcType=INTEGER},
+            </if>
+            <if test="orderDate != null">
+                #{orderDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="comSumPrice != null">
+                #{comSumPrice,jdbcType=INTEGER},
+            </if>
+            <if test="isValid != null">
+                #{isValid,jdbcType=INTEGER},
+            </if>
+            <if test="ordState != null">
+                #{ordState,jdbcType=VARCHAR},
+            </if>
+            <if test="ordRemark != null">
+                #{ordRemark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yjxxt.bean.Order">
+        update t_order
+        <set>
+            <if test="orderNum != null">
+                order_num = #{orderNum,jdbcType=INTEGER},
+            </if>
+            <if test="orderDate != null">
+                order_date = #{orderDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="comSumPrice != null">
+                com_sum_price = #{comSumPrice,jdbcType=INTEGER},
+            </if>
+            <if test="isValid != null">
+                is_valid = #{isValid,jdbcType=INTEGER},
+            </if>
+            <if test="ordState != null">
+                ord_state = #{ordState,jdbcType=VARCHAR},
+            </if>
+            <if test="ordRemark != null">
+                ord_remark = #{ordRemark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yjxxt.bean.Order">
+    update t_order
+    set order_num = #{orderNum,jdbcType=INTEGER},
+      order_date = #{orderDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      com_sum_price = #{comSumPrice,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      ord_state = #{ordState,jdbcType=VARCHAR},
+      ord_remark = #{ordRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!--    退单-->
+    <delete id="tuiOrder">
+        delete from t_order where id = #{id}
+    </delete>
+
+
+    <!--    列表展示-->
+    <select id="list" resultType="com.yjxxt.bean.Order">
+        select * from t_order where user_id = #{userId}
+    </select>
+
+
+    <!--沈康纯-->
+    <select id="queryAllOrders" resultType="com.yjxxt.bean.Order" parameterType="com.yjxxt.query.OrderQuery" >
+        select
+        *
+        from t_order
+        <where>
+            <if test="orderNum != null">
+                order_num=#{orderNum}
+            </if>
+        </where>
+    </select>
+
+</mapper>
